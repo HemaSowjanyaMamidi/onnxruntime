@@ -14,9 +14,9 @@ using namespace std;
 namespace onnxruntime {
 namespace contrib {
 template <typename T>
-class Mish : public OpKernel {
+class Swish : public OpKernel {
  public:
-  explicit Mish(const OpKernelInfo& info) : OpKernel(info) {}
+  explicit Swish(const OpKernelInfo& info) : OpKernel(info) {}
 
   Status Compute(OpKernelContext* context) const override {
     auto X = context->Input<Tensor>(0);
