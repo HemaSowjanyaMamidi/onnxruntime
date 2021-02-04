@@ -342,6 +342,35 @@ and present state are optional. Present state could appear in output even when p
           }
         }
       });
+    
+  static const char* Swish_doc = R"DOC(
+Created for testing
+)DOC";
+
+  ONNX_CONTRIB_OPERATOR_SCHEMA(Swish)
+      .SetDomain(kOnnxDomain)
+      .SinceVersion(1)
+      .SetDoc(Swish_doc)
+      .Input(
+          0,
+          "X",
+          "Input tensor",
+          "T")
+      .Output(
+          0,
+          "Y",
+          "Output tensor",
+          "T")
+      .TypeConstraint(
+          "T",
+          {"tensor(float)",
+             "tensor(float16)",
+             "tensor(double)",
+           "tensor(bfloat16)"
+          },
+          "Constrain input and output types to all numeric tensors and bool tensors.")
+          .TypeAndShapeInferenceFunction(ONNX_NAMESPACE::propagateShapeAndTypeFromFirstInput);
+
 
   ONNX_CONTRIB_OPERATOR_SCHEMA(QAttention)
       .SetDomain(kMSDomain)
