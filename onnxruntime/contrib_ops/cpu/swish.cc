@@ -1,4 +1,10 @@
 #include "contrib_ops/cpu/swish.h"
+#include "core/common/common.h"
+#include "core/framework/op_kernel.h"
+#include "core/util/math.h"
+#include "core/util/math_cpuonly.h"
+#include "core/framework/tensor.h"
+
 namespace onnxruntime {
 namespace contrib {
 
