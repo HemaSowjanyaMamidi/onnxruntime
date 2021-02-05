@@ -16,38 +16,19 @@ DEFINE_KERNEL(float);
 DEFINE_KERNEL(double);
 
     
-template <typename T>
-static Status SwishImpl(const Tensor* X, Tensor* Y) {
-  const auto& X_shape = X->Shape();
-  int64_t X_num_dims = static_cast<int64_t>(X_shape.NumDimensions());
-  const auto* X_data = reinterpret_cast<const T*>(X->DataRaw());
-  auto* Y_data = reinterpret_cast<T*>(Y->MutableDataRaw());
-  for (int64_t i = 0, sz = X_shape.Size(); i < sz; i++,Y_Data++,X_Data++) {
+template <typename T>    
+Status Swish::Compute(OpKernelContext* ctx) const {
+  auto X = context->Input<Tensor>(0);
+    auto& dims = X->Shape();
+    auto Y = context->Output(0, dims);
+    
+    auto X_Data = (X->template Data<T>());
+    auto Y_Data = (Y->template MutableData<T>());
+
+    for (int64_t i = 0, sz = dims.Size(); i < sz; i++,Y_Data++,X_Data++) {
       *Y_Data = *X_Data / (exp(-*X_Data) + 1);
     }
-
     return Status::OK();
-}
-    
-    
-Status Swish::Compute(OpKernelContext* ctx) const {
-  Status status;
-  const auto* X = ctx->Input<Tensor>(0);
-  const auto& X_shape = X->Shape();
-  auto* Y = ctx->Output(0, X_shape);
-  MLDataType data_type = X->DataType();
-  const auto element_size = data_type->Size();
-  switch (element_size) {
-    case sizeof(float):
-      status = SwishImpl<float>(X, Y);
-      break;
-    case sizeof(double):
-      status = SwishImpl<double>(X, Y);
-      break;
-    default:
-      ORT_THROW("Unsupported input data type of ", data_type);
-  }
-  return status;
-}        
+};        
 }
 }
